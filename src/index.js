@@ -2,8 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client/react';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import Houses from './components/Houses';
-import Search from './components/Search';
+import HousesSearch from './components/shared/HousesSearch';
 import "./index.css";
 
 const client = new ApolloClient({
@@ -18,8 +17,7 @@ const client = new ApolloClient({
 
   const App = () => (
     <ApolloProvider client={client}>
-    <Search> </Search>
-      <Houses />
+    <HousesSearch />
   </ApolloProvider>
   );
 
