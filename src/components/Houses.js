@@ -1,6 +1,8 @@
 import React from 'react';
 import { gql } from "@apollo/client";
 import { useQuery } from '@apollo/client/react';
+import { Badge } from './shared/Badge';
+import { List, ListItem } from './shared/List';
 
 const HOUSES = gql`
 query getAllHouses {
@@ -24,9 +26,10 @@ export default function Houses() {
   if (error) return <p>Error : {error.message}</p>;
 
   return data.housesCollection.edges.map(({ node }) => (
-  <div key={node.id}>
-    <p>{node.name}</p>
-    <p>{node.address}</p>
-  </div>
-));
+    <List>
+      <ListItem key={node.id}>
+        <p>{node.name}</p> <Badge>{node.address}</Badge>
+      </ListItem>
+    </List>
+  ));
 }
