@@ -1,17 +1,26 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createRoot } from 'react-dom/client';
+import { ApolloProvider } from '@apollo/client/react';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import Houses from './components/Houses';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: `${process.env.REACT_APP_SUPABASE_URL}/graphql/v1`,
+    headers: {
+      apikey: process.env.REACT_APP_SUPABASE_PUBLISHABLE_KEY
+    },
+  }),
+  cache: new InMemoryCache(),
+});
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  const App = () => (
+    <ApolloProvider client={client}>
+      <Houses />
+  </ApolloProvider>
+  );
+
+
+const root = createRoot(document.getElementById('root')); 
+root.render(<App />);
+
