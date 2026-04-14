@@ -2,8 +2,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client/react';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import HousesSearch from './components/shared/HousesSearch';
+import HouseSearch from './components/shared/HouseSearch';
 import "./index.css";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import House from './components/House';
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -16,9 +18,14 @@ const client = new ApolloClient({
 });
 
   const App = () => (
-    <ApolloProvider client={client}>
-    <HousesSearch />
-  </ApolloProvider>
+    <BrowserRouter>
+        <ApolloProvider client={client}>
+          <Routes>
+            <Route path="/house/:id" element={<House />} />
+            <Route path="/" element={<HouseSearch />} />
+          </Routes>
+        </ApolloProvider>
+      </BrowserRouter>
   );
 
 
