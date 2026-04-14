@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
-import Search from '../Search';
+import InputForm from './InputForm';
 import Houses from '../Houses';
 import { useLazyQuery} from '@apollo/client/react';
 import {gql} from "@apollo/client";
@@ -25,10 +25,10 @@ const HousesSearch = () => {
 
     return (
         <div>
-            <Search 
+            <InputForm 
                 input={input}
                 onChange={(e) => setInput(e.target.value)}
-                onSearch={() => search({ variables: { search: `%${input}%` } })}
+                onSubmit={() => search({ variables: { search: `%${input}%` } })}
             />
             <Houses newHouses={data ? data.housesCollection.edges.map(edge => edge.node) : null}/>
         </div>
