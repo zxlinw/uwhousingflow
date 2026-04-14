@@ -2,7 +2,8 @@ import React from 'react';
 import { gql } from "@apollo/client";
 import { useQuery } from '@apollo/client/react';
 import { Badge } from './shared/Badge';
-import { List, ListItem } from './shared/List';
+import { List, ListItemWithLink } from './shared/List';
+import {Link} from 'react-router-dom';
 
 const HOUSES = gql`
 query getAllHouses {
@@ -24,9 +25,11 @@ export default function Houses({newHouses}) {
 
   const renderHouses = (houses) => {
     return houses.map(({ id, name, address }) => (
-      <ListItem key={id}>
-        {name} <Badge>{address}</Badge>
-      </ListItem>
+      <ListItemWithLink key={id}>
+        <Link to={`/house/${id}`}>
+          {name} <Badge>{address}</Badge>
+        </Link>
+      </ListItemWithLink>
     ));
   };
 
