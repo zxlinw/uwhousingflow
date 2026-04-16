@@ -6,6 +6,7 @@ import HouseSearch from './components/shared/HouseSearch';
 import "./index.css";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import House from './components/House';
+import AddReview from './components/AddReview';
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -22,6 +23,7 @@ const client = new ApolloClient({
         <ApolloProvider client={client}>
           <Routes>
             <Route path="/house/:id" element={<House />} />
+            <Route path="/house/:id/review" element={<AddReview />} />
             <Route path="/" element={<HouseSearch />} />
           </Routes>
         </ApolloProvider>
