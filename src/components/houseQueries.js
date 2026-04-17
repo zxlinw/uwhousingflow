@@ -14,6 +14,10 @@ export const HOUSE = gql`
                 id
                 body
                 rating
+                cost
+                cleanliness
+                location
+                management
               }
             }
           }
@@ -24,21 +28,30 @@ export const HOUSE = gql`
 `;
 
 export const ADD_REVIEW = gql`
-  mutation addReview($body: String!, $rating: Int!, $house_id: UUID!) {
+  mutation addReview(
+    $body: String!
+    $rating: Int!
+    $house_id: UUID!
+    $cost: Int
+    $cleanliness: Int
+    $location: Int
+    $management: Int
+  ) {
     insertIntoreviewCollection(
       objects: [
         {
           body: $body
           rating: $rating
           house_id: $house_id
+          cost: $cost
+          cleanliness: $cleanliness
+          location: $location
+          management: $management
         }
       ]
     ) {
       records {
         id
-        body
-        rating
-        house_id
       }
     }
   }

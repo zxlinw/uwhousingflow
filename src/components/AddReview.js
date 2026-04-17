@@ -85,10 +85,65 @@ const RatingHint = styled.p`
   color: #64748b;
 `;
 
+const CategoryRatingSection = styled.div`
+  margin-top: 2rem;
+`;
+
+const CategoryGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+`;
+
+const CategoryCard = styled.div`
+  background: rgba(148, 163, 184, 0.08);
+  padding: 1.5rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+`;
+
+const CategoryLabel = styled.p`
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0f172a;
+`;
+
+const CategoryStars = styled.div`
+  display: inline-flex;
+  gap: 0.4rem;
+`;
+
+const CategoryStarButton = styled.button`
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: ${({ $active }) => ($active ? '#f59e0b' : '#cbd5e1')};
+  font-size: 1.8rem;
+  line-height: 1;
+
+  &:hover {
+    cursor: pointer;
+    transform: translateY(-1px) scale(1.08);
+  }
+`;
+
+const Subtitle = styled.p`
+  margin: 0.5rem 0 0;
+  font-size: 1.3rem;
+  color: #94a3b8;
+  font-weight: 400;
+`;
+
 const AddReview = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [rating, setRating] = useState(5);
+  const [cost, setCost] = useState(0);
+  const [cleanliness, setCleanliness] = useState(0);
+  const [location, setLocation] = useState(0);
+  const [management, setManagement] = useState(0);
   const [comments, setComments] = useState('');
 
   const { loading, error, data } = useQuery(HOUSE, { variables: { id } });
@@ -99,14 +154,19 @@ const AddReview = () => {
 
   const handleSave = async () => {
     const trimmedComments = comments.trim();
+    const variables = {
+      body: trimmedComments,
+      rating,
+      house_id: id,
+    };
 
-    await addReview({
-      variables: {
-        body: trimmedComments,
-        rating,
-        house_id: id,
-      },
-    });
+    // Only include optional ratings if they have a value > 0
+    if (cost > 0) variables.cost = cost;
+    if (cleanliness > 0) variables.cleanliness = cleanliness;
+    if (location > 0) variables.location = location;
+    if (management > 0) variables.management = management;
+
+    await addReview({ variables });
 
     navigate(`/house/${id}`);
   };
@@ -127,6 +187,22 @@ const AddReview = () => {
     );
   });
 
+  const renderCategoryStars = (value, setter) => Array.from({ length: 5 }, (_, index) => {
+    const starValue = index + 1;
+
+    return (
+      <CategoryStarButton
+        key={starValue}
+        type="button"
+        $active={starValue <= value}
+        onClick={() => setter(starValue)}
+        aria-label={`${starValue} star${starValue === 1 ? '' : 's'}`}
+      >
+        ★
+      </CategoryStarButton>
+    );
+  });
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
   if (!house) return <p>No house found</p>;
@@ -143,6 +219,29 @@ const AddReview = () => {
           <Stars>{renderStars()}</Stars>
           <RatingHint>{ratingText}</RatingHint>
         </Field>
+
+        <CategoryRatingSection>
+          <Field as="div">Optional Category Ratings</Field>
+          <Subtitle>You can rate individual aspects of this house. Leave unrated to skip.</Subtitle>
+          <CategoryGrid>
+            <CategoryCard>
+              <CategoryLabel>Cost</CategoryLabel>
+              <CategoryStars>{renderCategoryStars(cost, setCost)}</CategoryStars>
+            </CategoryCard>
+            <CategoryCard>
+              <CategoryLabel>Cleanliness</CategoryLabel>
+              <CategoryStars>{renderCategoryStars(cleanliness, setCleanliness)}</CategoryStars>
+            </CategoryCard>
+            <CategoryCard>
+              <CategoryLabel>Location</CategoryLabel>
+              <CategoryStars>{renderCategoryStars(location, setLocation)}</CategoryStars>
+            </CategoryCard>
+            <CategoryCard>
+              <CategoryLabel>Management</CategoryLabel>
+              <CategoryStars>{renderCategoryStars(management, setManagement)}</CategoryStars>
+            </CategoryCard>
+          </CategoryGrid>
+        </CategoryRatingSection>
 
         <Field htmlFor="review-comments">
           Comments
