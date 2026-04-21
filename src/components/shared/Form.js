@@ -1,41 +1,58 @@
 import styled from "@emotion/styled";
 
 export const Input = styled.input`
-  height: calc(1.5em + 1rem + 2px);
-  padding: 0.5rem 1rem;
-  margin: 2rem 0;
-  font-size: 2.4rem;
+  height: 5.2rem;
+  padding: 0.9rem 1.4rem;
+  margin: 0;
+  font-size: 1.8rem;
   line-height: 1.5;
-  border-radius: 0.3rem;
+  border-radius: 1.1rem;
   display: block;
   width: 100%;
-  color: #495057;
-  background-color: #fff;
+  color: var(--ink-900);
+  background-color: var(--surface);
   background-clip: padding-box;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--line);
+
+  &:focus {
+    outline: none;
+    border-color: var(--brand-600);
+    box-shadow: 0 0 0 3px rgba(45, 133, 91, 0.16);
+  }
 `;
 
 export const Button = styled.button`
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background: linear-gradient(135deg, var(--brand-700), var(--brand-500));
+  border-color: transparent;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
   border: 1px solid transparent;
-  padding: 0.5rem 1rem;
-  font-size: 2rem;
+  padding: 1rem 1.8rem;
+  font-size: 1.7rem;
+  font-weight: 700;
   line-height: 1.5;
-  height: calc(1.5em + 1rem + 8px);
-  border-radius: 0.25rem;
+  min-height: 5.2rem;
+  border-radius: 1.1rem;
   user-select: none;
+  transition: transform 120ms ease, box-shadow 160ms ease, filter 120ms ease;
+
   &:hover {
     cursor: pointer;
-    background-color: #0069d9;
-    border-color: #0062cc;
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 12px 26px rgba(20, 80, 54, 0.28);
   }
+
   &:active {
-    background-color: #0062cc;
-    border-color: #005cbf;
+    transform: translateY(0);
+    filter: brightness(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 `;

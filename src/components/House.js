@@ -5,6 +5,7 @@ import { List, ListItem } from './shared/List';
 import { Link, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { HOUSE } from './houseQueries';
+import PageShell from './shared/PageShell';
 
 const AddReviewButton = styled(Link)`
   position: fixed;
@@ -244,9 +245,16 @@ const House = () => {
     const averages = calculateAverages(reviews);
 
     return (
-        <div>
+        <PageShell
+          title={name}
+          subtitle={address}
+          navItems={[
+            { to: '/', label: 'Home' },
+            { to: `/house/${id}/review`, label: 'Add Review' },
+          ]}
+        >
         <h3>
-            {name} <Badge>{address}</Badge>
+            Reviews <Badge>{address}</Badge>
         </h3>
 
         <AddReviewButton to={`/house/${id}/review`}>Add Review</AddReviewButton>
@@ -374,7 +382,7 @@ const House = () => {
             ))}
           </List>
         )}
-        </div>
+        </PageShell>
     );
 };
 

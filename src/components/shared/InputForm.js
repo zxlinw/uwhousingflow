@@ -2,19 +2,50 @@ import React from 'react';
 import styled from "@emotion/styled";
 import { Input, Button } from "./Form";
 
-const Container = styled.div`
+const Container = styled.form`
     display: flex;
+        flex-wrap: wrap;
     align-items: center;
+        gap: 1rem;
+        width: min(96rem, 100%);
+        padding: 1.6rem;
+        border: 1px solid var(--line);
+        border-radius: 1.6rem;
+        background: linear-gradient(180deg, var(--surface) 0%, var(--surface-alt) 100%);
+        box-shadow: var(--shadow-lg);
+
+        > input {
+            flex: 1 1 28rem;
+        }
+
     > button {
-        margin-left: 1rem;
+            flex: 0 0 auto;
     }
+`;
+
+const Hint = styled.p`
+    width: 100%;
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--ink-500);
 `;
 
 const InputForm = ({input, onChange, onSubmit, buttonText}) => {
     return (
-        <Container>
-            <Input value={input} onChange={onChange} />
-            <Button onClick={onSubmit}>{buttonText || "Search"}</Button>
+                <Container
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        onSubmit();
+                    }}
+                >
+                        <Input
+                            value={input}
+                            onChange={onChange}
+                            placeholder="Search by house name or address"
+                            aria-label="Search by house name or address"
+                        />
+                        <Button type="submit">{buttonText || "Search"}</Button>
+                        <Hint>Try: 15th Ave, University Way, or a house name</Hint>
         </Container>
     );
 }

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Badge } from './shared/Badge';
 import { Button } from './shared/Form';
 import { HOUSE, ADD_REVIEW } from './houseQueries';
+import PageShell from './shared/PageShell';
 
 const Page = styled.div`
   max-width: 72rem;
@@ -208,9 +209,17 @@ const AddReview = () => {
   if (!house) return <p>No house found</p>;
 
   return (
+    <PageShell
+      title={`Add Review: ${house.name}`}
+      subtitle={house.address}
+      navItems={[
+        { to: '/', label: 'Home' },
+        { to: `/house/${id}`, label: 'Back to House' },
+      ]}
+    >
     <Page>
       <h3>
-        Add review for {house.name} <Badge>{house.address}</Badge>
+        New Review <Badge>{house.address}</Badge>
       </h3>
 
       <Card>
@@ -263,6 +272,7 @@ const AddReview = () => {
         </Actions>
       </Card>
     </Page>
+    </PageShell>
   );
 };
 
