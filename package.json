@@ -6,6 +6,8 @@
     "@apollo/client": "^4.1.7",
     "@emotion/core": "^11.0.0",
     "@emotion/styled": "^11.14.1",
+    "@langchain/core": "^1.1.42",
+    "@langchain/groq": "^1.2.0",
     "@supabase/supabase-js": "^2.103.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",

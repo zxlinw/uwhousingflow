@@ -24,6 +24,24 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
+### Review summaries
+
+House pages now call a small Python backend that uses LangChain with Ollama to generate the summary at the top of the ratings panel.
+
+To run it locally:
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+ollama serve
+ollama pull llama3.1
+uvicorn app:app --reload --port 8000
+```
+
+The frontend defaults to `http://127.0.0.1:8000`, and you can override it with `REACT_APP_SUMMARY_API_URL` if needed.
+
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 

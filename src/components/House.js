@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { Badge } from './shared/Badge';
 import { List, ListItem } from './shared/List';
@@ -38,6 +38,43 @@ const AverageRatingsSection = styled.div`
   margin: 2rem 0;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
   backdrop-filter: blur(16px);
+`;
+
+const SummaryPanel = styled.div`
+  margin: 0 0 2rem;
+  padding: 1.8rem 2rem;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.98));
+`;
+
+const SummaryLabel = styled.p`
+  margin: 0 0 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2563eb;
+`;
+
+const SummaryText = styled.p`
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: #0f172a;
+`;
+
+const SummaryMeta = styled.p`
+  margin: 1rem 0 0;
+  font-size: 1.3rem;
+  color: #64748b;
+`;
+
+const SummaryStatus = styled.p`
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: ${({ $tone }) => ($tone === 'error' ? '#b91c1c' : '#475569')};
 `;
 
 const SectionTitle = styled.h4`
@@ -181,6 +218,10 @@ const renderStars = (rating) => Array.from({ length: 5 }, (_, index) => (
   <Star key={`${rating}-${index}`} $filled={index < rating}>★</Star>
 ));
 
+const SUMMARY_API_URL = process.env.REACT_APP_SUMMARY_API_URL || 'http://127.0.0.1:8000';
+
+const formatSummaryApiUrl = (value) => value.replace(/\/$/, '');
+
 const calculateAverages = (reviews) => {
   if (reviews.length === 0) return null;
 
@@ -228,40 +269,119 @@ const calculateAverages = (reviews) => {
 };
 
 const House = () => {
-    const { id } = useParams();
+  const { id } = useParams();
+  const [reviewSummary, setReviewSummary] = useState('');
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryError, setSummaryError] = useState('');
 
-    const { loading, error, data } = useQuery(HOUSE, { variables: { id }});
+  const { loading, error, data } = useQuery(HOUSE, { variables: { id } });
+  const house = data?.housesCollection?.edges[0]?.node;
+  const name = house?.name || '';
+  const address = house?.address || '';
+  const reviewCollection = house?.reviewCollection;
+  const reviews = useMemo(() => reviewCollection?.edges.map((edge) => edge.node) || [], [reviewCollection]);
+  const averages = useMemo(() => calculateAverages(reviews), [reviews]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error : {error.message}</p>;
+  useEffect(() => {
+    let cancelled = false;
 
-    const house = data?.housesCollection?.edges[0]?.node;
+    const generateSummary = async () => {
+      if (!house || reviews.length === 0) {
+        setReviewSummary('');
+        setSummaryLoading(false);
+        setSummaryError('');
+        return;
+      }
 
-    if (!house) return <p>No house found</p>;
+      try {
+        setSummaryLoading(true);
+        setSummaryError('');
 
-    const { name, address, reviewCollection } = house;
+        const response = await fetch(`${formatSummaryApiUrl(SUMMARY_API_URL)}/api/house-summary`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            address,
+            reviews: reviews.map(({ body, rating, cost, cleanliness, location, management }) => ({
+              body,
+              rating,
+              cost,
+              cleanliness,
+              location,
+              management,
+            })),
+          }),
+        });
 
-    const reviews = reviewCollection?.edges.map(edge => edge.node) || [];
-    const averages = calculateAverages(reviews);
+        if (!response.ok) {
+          throw new Error(`Summary request failed with status ${response.status}`);
+        }
 
-    return (
-        <PageShell
-          title={name}
-          subtitle={address}
-          navItems={[
-            { to: '/', label: 'Home' },
-            { to: `/house/${id}/review`, label: 'Add Review' },
-          ]}
-        >
-        <h3>
-            Reviews <Badge>{address}</Badge>
-        </h3>
+        const result = await response.json();
+
+        if (!cancelled) {
+          setReviewSummary(result.summary || '');
+        }
+      } catch (requestError) {
+        if (!cancelled) {
+          setReviewSummary('');
+          setSummaryError('AI overview unavailable right now. Start the Python backend and Ollama, then reload this page.');
+        }
+      } finally {
+        if (!cancelled) {
+          setSummaryLoading(false);
+        }
+      }
+    };
+
+    generateSummary();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [address, house, name, reviews]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
+  if (!house) return <p>No house found</p>;
+
+  return (
+    <PageShell
+      title={name}
+      subtitle={address}
+      navItems={[
+        { to: '/', label: 'Home' },
+        { to: `/house/${id}/review`, label: 'Add Review' },
+      ]}
+    >
+      <h3>
+        Reviews <Badge>{address}</Badge>
+      </h3>
 
         <AddReviewButton to={`/house/${id}/review`}>Add Review</AddReviewButton>
 
         {averages && reviews.length > 0 && (
           <AverageRatingsSection>
             <SectionTitle>Average Ratings</SectionTitle>
+            <SummaryPanel>
+              <SummaryLabel>AI Overview</SummaryLabel>
+              {summaryLoading && (
+                <SummaryStatus>Generating a short overview from the existing reviews...</SummaryStatus>
+              )}
+              {!summaryLoading && reviewSummary && <SummaryText>{reviewSummary}</SummaryText>}
+              {!summaryLoading && !reviewSummary && summaryError && (
+                <SummaryStatus $tone="error">{summaryError}</SummaryStatus>
+              )}
+              {!summaryLoading && !reviewSummary && !summaryError && (
+                <SummaryStatus>No summary available yet.</SummaryStatus>
+              )}
+              <SummaryMeta>
+                Based on {reviews.length} review{reviews.length === 1 ? '' : 's'} with LangChain and a free Ollama model.
+              </SummaryMeta>
+            </SummaryPanel>
             <RatingsContainer>
               <CircularProgressContainer>
                 <CircularProgress>
@@ -383,7 +503,7 @@ const House = () => {
           </List>
         )}
         </PageShell>
-    );
+  );
 };
 
 export default House;
