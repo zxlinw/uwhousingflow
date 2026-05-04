@@ -13,6 +13,7 @@ export const HOUSE = gql`
               node {
                 id
                 body
+                user_id
                 rating
                 cost
                 cleanliness
@@ -32,6 +33,7 @@ export const ADD_REVIEW = gql`
     $body: String!
     $rating: Int!
     $house_id: UUID!
+    $user_id: UUID!
     $cost: Int
     $cleanliness: Int
     $location: Int
@@ -43,6 +45,7 @@ export const ADD_REVIEW = gql`
           body: $body
           rating: $rating
           house_id: $house_id
+          user_id: $user_id
           cost: $cost
           cleanliness: $cleanliness
           location: $location

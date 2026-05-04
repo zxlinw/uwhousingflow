@@ -181,6 +181,7 @@ const AddReview = () => {
       body: trimmedComments,
       rating,
       house_id: id,
+      user_id: user.id,
     };
 
     // Only include optional ratings if they have a value > 0

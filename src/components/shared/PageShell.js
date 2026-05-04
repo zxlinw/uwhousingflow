@@ -92,6 +92,8 @@ const PageShell = ({ title, subtitle, children, navItems = [] }) => {
             </NavLink>
           ))}
 
+          {user && <NavLink to="/favorites">Favorites</NavLink>}
+
           {user ? (
             <AuthButton type="button" onClick={() => supabase.auth.signOut()}>
               Sign Out

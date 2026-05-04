@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import House from './components/House';
 import AddReview from './components/AddReview';
 import AuthPage from './components/auth/AuthPage';
+import Favorites from './components/Favorites';
 import { supabase } from './lib/supabaseClient';
 import { AuthProvider } from './context/AuthContext';
 
@@ -42,6 +43,7 @@ const App = () => {
           <Routes>
             <Route path="/house/:id" element={<House />} />
             <Route path="/house/:id/review" element={<AddReview />} />
+            <Route path="/favorites" element={<Favorites />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/" element={<HouseSearch />} />
           </Routes>

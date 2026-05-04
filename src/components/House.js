@@ -6,12 +6,10 @@ import { Link, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { HOUSE } from './houseQueries';
 import PageShell from './shared/PageShell';
+import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../context/AuthContext';
 
 const AddReviewButton = styled(Link)`
-  position: fixed;
-  right: 2.5rem;
-  bottom: 2.5rem;
-  z-index: 10;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -27,6 +25,43 @@ const AddReviewButton = styled(Link)`
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 22px 40px rgba(15, 23, 42, 0.28);
+  }
+`;
+
+const FloatingActions = styled.div`
+  position: fixed;
+  right: 2.5rem;
+  bottom: 2.5rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+`;
+
+const FavoriteButton = styled.button`
+  width: 4.8rem;
+  height: 4.8rem;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: ${({ $active }) => ($active
+    ? 'linear-gradient(135deg, #ef4444, #f97316)'
+    : 'linear-gradient(135deg, #64748b, #475569)')};
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.24);
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.03);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
   }
 `;
 
@@ -210,6 +245,12 @@ const CategoryRatingTag = styled.div`
   font-weight: 500;
 `;
 
+const ReviewAuthor = styled.p`
+  margin: 0.4rem 0 0;
+  font-size: 1.2rem;
+  color: #64748b;
+`;
+
 const EmptyState = styled.p`
   margin: 1.5rem 0 0;
 `;
@@ -270,6 +311,10 @@ const calculateAverages = (reviews) => {
 
 const House = () => {
   const { id } = useParams();
+  const { user, loading: authLoading } = useAuth();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favLoading, setFavLoading] = useState(false);
+  const [favError, setFavError] = useState('');
   const [reviewSummary, setReviewSummary] = useState('');
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryError, setSummaryError] = useState('');
@@ -281,6 +326,65 @@ const House = () => {
   const reviewCollection = house?.reviewCollection;
   const reviews = useMemo(() => reviewCollection?.edges.map((edge) => edge.node) || [], [reviewCollection]);
   const averages = useMemo(() => calculateAverages(reviews), [reviews]);
+  const currentUserName = useMemo(() => {
+    const username = user?.user_metadata?.username;
+    if (username && String(username).trim()) {
+      return String(username).trim();
+    }
+
+    const email = user?.email;
+    if (email && String(email).trim()) {
+      return String(email).trim();
+    }
+
+    return null;
+  }, [user]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadFavorite = async () => {
+      if (!user || !id) {
+        if (mounted) setIsFavorite(false);
+        return;
+      }
+
+      const { data } = await supabase
+        .from('favorites')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('house_id', id)
+        .limit(1);
+
+      if (mounted) setIsFavorite(Array.isArray(data) && data.length > 0);
+    };
+
+    loadFavorite();
+
+    return () => { mounted = false; };
+  }, [user, id]);
+
+  const toggleFavorite = async () => {
+    if (!user) return;
+    setFavLoading(true);
+    setFavError('');
+
+    try {
+      if (!isFavorite) {
+        const { error: insertError } = await supabase.from('favorites').insert({ user_id: user.id, house_id: id });
+        if (insertError) throw insertError;
+        setIsFavorite(true);
+      } else {
+        const { error: deleteError } = await supabase.from('favorites').delete().match({ user_id: user.id, house_id: id });
+        if (deleteError) throw deleteError;
+        setIsFavorite(false);
+      }
+    } catch (requestError) {
+      setFavError(requestError.message || 'Unable to update favorites.');
+    } finally {
+      setFavLoading(false);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -361,7 +465,21 @@ const House = () => {
         Reviews <Badge>{address}</Badge>
       </h3>
 
-        <AddReviewButton to={`/house/${id}/review`}>Add Review</AddReviewButton>
+        <FloatingActions>
+          <AddReviewButton to={`/house/${id}/review`}>Add Review</AddReviewButton>
+          <FavoriteButton
+            type="button"
+            onClick={toggleFavorite}
+            disabled={favLoading || authLoading}
+            $active={isFavorite}
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            {isFavorite ? '♥' : '♡'}
+          </FavoriteButton>
+        </FloatingActions>
+
+        {favError && <SummaryStatus $tone="error">{favError}</SummaryStatus>}
 
         {averages && reviews.length > 0 && (
           <AverageRatingsSection>
@@ -496,7 +614,12 @@ const House = () => {
                     </CategoryRatings>
                   )}
 
-                  <div>{review.body || 'No comments provided.'}</div>
+                  <div style={{ fontSize: '0.95rem', color: '#475569' }}>{review.body || 'No comments provided.'}</div>
+                  <ReviewAuthor>
+                    — {review.user_id && user && review.user_id === user.id
+                      ? (currentUserName || `User ${String(review.user_id).slice(0, 8)}`)
+                      : (review.user_id ? `User ${String(review.user_id).slice(0, 8)}` : 'Anonymous')}
+                  </ReviewAuthor>
                 </ReviewCard>
               </ListItem>
             ))}

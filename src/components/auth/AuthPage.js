@@ -87,6 +87,7 @@ const AuthPage = () => {
   const [mode, setMode] = useState('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -116,9 +117,20 @@ const AuthPage = () => {
 
         navigate('/');
       } else {
+        const normalizedUsername = username.trim();
+
+        if (!normalizedUsername) {
+          throw new Error('Please choose a username.');
+        }
+
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              username: normalizedUsername,
+            },
+          },
         });
 
         if (signUpError) {
@@ -175,6 +187,21 @@ const AuthPage = () => {
               onChange={(event) => setPassword(event.target.value)}
             />
           </Group>
+
+          {mode === 'signup' && (
+            <Group htmlFor="auth-username">
+              Username
+              <Input
+                id="auth-username"
+                type="text"
+                autoComplete="username"
+                minLength={2}
+                required
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+              />
+            </Group>
+          )}
 
           <PrimaryButton type="submit" disabled={submitting}>
             {submitting ? 'Please wait...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
