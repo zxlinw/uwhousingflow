@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import { useMutation, useQuery } from '@apollo/client/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Badge } from './shared/Badge';
 import { Button } from './shared/Form';
 import { HOUSE, ADD_REVIEW } from './houseQueries';
 import PageShell from './shared/PageShell';
+import { useAuth } from '../context/AuthContext';
 
 const Page = styled.div`
   max-width: 72rem;
@@ -137,9 +138,30 @@ const Subtitle = styled.p`
   font-weight: 400;
 `;
 
+const AuthNotice = styled.div`
+  max-width: 72rem;
+  margin: 2rem auto 0;
+  padding: 2rem;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(255, 255, 255, 0.92);
+`;
+
+const AuthNoticeText = styled.p`
+  margin: 0;
+  font-size: 1.6rem;
+  color: #0f172a;
+
+  a {
+    color: #1d4ed8;
+    font-weight: 700;
+  }
+`;
+
 const AddReview = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
   const [rating, setRating] = useState(5);
   const [cost, setCost] = useState(0);
   const [cleanliness, setCleanliness] = useState(0);
@@ -207,6 +229,29 @@ const AddReview = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
   if (!house) return <p>No house found</p>;
+
+  if (authLoading) {
+    return <p>Checking your account...</p>;
+  }
+
+  if (!user) {
+    return (
+      <PageShell
+        title={`Add Review: ${house.name}`}
+        subtitle={house.address}
+        navItems={[
+          { to: '/', label: 'Home' },
+          { to: `/house/${id}`, label: 'Back to House' },
+        ]}
+      >
+        <AuthNotice>
+          <AuthNoticeText>
+            Sign in to add a review. <Link to="/auth">Go to authentication</Link>.
+          </AuthNoticeText>
+        </AuthNotice>
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
