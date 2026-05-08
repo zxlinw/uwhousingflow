@@ -15,7 +15,13 @@ export const ListItem = styled.li`
   background-color: var(--surface);
   border: 1px solid var(--line);
   border-radius: 1.4rem;
-  box-shadow: 0 10px 30px rgba(19, 53, 37, 0.06);
+  box-shadow: 0 4px 15px rgba(212, 165, 0, 0.06);
+  transition: all 120ms ease;
+
+  &:hover {
+    border-color: var(--brand-500);
+    box-shadow: 0 8px 25px rgba(212, 165, 0, 0.12);
+  }
 `;
 
 export const ListItemWithLink = styled.li`
@@ -28,12 +34,15 @@ export const ListItemWithLink = styled.li`
     border: 1px solid var(--line);
     border-radius: 1.4rem;
     transition: transform 120ms ease, box-shadow 160ms ease, border-color 120ms ease;
+    text-decoration: none;
+    color: inherit;
 
     &:hover {
       border-color: var(--brand-500);
-      box-shadow: 0 14px 30px rgba(19, 53, 37, 0.12);
-      transform: translateY(-1px);
+      box-shadow: 0 8px 30px rgba(212, 165, 0, 0.15);
+      transform: translateY(-3px);
       cursor: pointer;
+      background: linear-gradient(135deg, rgba(244, 208, 63, 0.02), rgba(255, 237, 78, 0.02));
     }
   }
 `;
