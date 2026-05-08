@@ -10,28 +10,33 @@ const Card = styled.div`
   margin: 0 auto;
   padding: 2.6rem;
   border-radius: 1.8rem;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 24px 60px rgba(14, 41, 29, 0.12);
+  border: 2px solid var(--brand-500);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(244, 208, 63, 0.05));
+  box-shadow: 0 24px 60px rgba(212, 165, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 `;
 
 const Tabs = styled.div`
   display: inline-flex;
-  border: 1px solid var(--line);
+  border: 2px solid var(--brand-500);
   border-radius: 999px;
   padding: 0.4rem;
-  background: var(--surface-alt);
+  background: linear-gradient(135deg, var(--surface-alt), rgba(244, 208, 63, 0.08));
 `;
 
 const TabButton = styled.button`
   border: 0;
   border-radius: 999px;
-  background: ${({ $active }) => ($active ? 'var(--brand-600)' : 'transparent')};
+  background: ${({ $active }) => ($active ? 'linear-gradient(135deg, var(--brand-700), var(--brand-600))' : 'transparent')};
   color: ${({ $active }) => ($active ? '#fff' : 'var(--ink-700)')};
   font-size: 1.4rem;
   font-weight: 700;
   padding: 0.75rem 1.4rem;
   cursor: pointer;
+  transition: all 120ms ease;
+
+  &:hover {
+    color: ${({ $active }) => ($active ? '#fff' : 'var(--brand-700)')};
+  }
 `;
 
 const Group = styled.label`
@@ -44,27 +49,49 @@ const Group = styled.label`
 const Input = styled.input`
   width: 100%;
   margin-top: 0.6rem;
-  border: 1px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: 1rem;
   padding: 1rem 1.2rem;
   font-size: 1.6rem;
   font-family: inherit;
+  background: var(--surface);
+  transition: all 120ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--brand-600);
+    box-shadow: 0 0 0 3px rgba(212, 165, 0, 0.12);
+    background: linear-gradient(135deg, rgba(244, 208, 63, 0.02), rgba(255, 237, 78, 0.02));
+  }
 `;
 
 const PrimaryButton = styled.button`
   margin-top: 2rem;
-  border: 1px solid var(--brand-600);
-  background: var(--brand-600);
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, var(--brand-700), var(--brand-600));
   color: #fff;
   border-radius: 999px;
   padding: 1rem 1.7rem;
   font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
+  transition: all 120ms ease;
+  box-shadow: 0 4px 15px rgba(212, 165, 0, 0.2);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201, 134, 15, 0.3);
+    filter: brightness(1.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    box-shadow: none;
   }
 `;
 

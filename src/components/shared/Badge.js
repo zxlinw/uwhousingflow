@@ -10,8 +10,15 @@ export const Badge = styled.span`
     white-space: normal;
     vertical-align: middle;
     border-radius: 999px;
-    color: #0f2c20;
-    background: linear-gradient(135deg, #c6ead2, #f0d8a8);
-    border: 1px solid #b8dbc5;
+    color: #2b2416;
+    background: linear-gradient(135deg, #f4d03f, #ffd700);
+    border: 1px solid #d4a500;
     margin-left: 0.8rem;
+    box-shadow: 0 2px 8px rgba(212, 165, 0, 0.15);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(212, 165, 0, 0.25);
+    }
 `;

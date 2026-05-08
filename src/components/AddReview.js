@@ -14,11 +14,11 @@ const Page = styled.div`
 `;
 
 const Card = styled.div`
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(244, 208, 63, 0.08));
+  border: 2px solid var(--brand-500);
   border-radius: 2rem;
   padding: 2.4rem;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 24px 60px rgba(212, 165, 0, 0.15);
   backdrop-filter: blur(16px);
 `;
 
@@ -26,7 +26,7 @@ const Field = styled.label`
   display: block;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--ink-900);
   margin-top: 2rem;
 `;
 
@@ -36,11 +36,20 @@ const Textarea = styled.textarea`
   margin-top: 1rem;
   padding: 1.2rem 1.4rem;
   border-radius: 1.2rem;
-  border: 1px solid #cbd5e1;
+  border: 2px solid var(--line);
   font-size: 1.8rem;
   line-height: 1.5;
   resize: vertical;
   box-sizing: border-box;
+  font-family: inherit;
+  transition: all 120ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--brand-600);
+    box-shadow: 0 0 0 3px rgba(212, 165, 0, 0.12);
+    background: linear-gradient(135deg, rgba(244, 208, 63, 0.02), rgba(255, 237, 78, 0.02));
+  }
 `;
 
 const Stars = styled.div`
@@ -53,13 +62,15 @@ const StarButton = styled.button`
   border: 0;
   background: transparent;
   padding: 0;
-  color: ${({ $active }) => ($active ? '#f59e0b' : '#cbd5e1')};
+  color: ${({ $active }) => ($active ? 'var(--brand-600)' : '#d1d5db')};
   font-size: 3rem;
   line-height: 1;
+  transition: all 120ms ease;
+  cursor: pointer;
 
   &:hover {
-    cursor: pointer;
-    transform: translateY(-1px) scale(1.04);
+    transform: translateY(-3px) scale(1.1);
+    color: var(--brand-600);
   }
 `;
 
@@ -71,13 +82,13 @@ const Actions = styled.div`
 `;
 
 const SecondaryButton = styled(Button)`
-  background-color: #e2e8f0;
-  border-color: #e2e8f0;
-  color: #0f172a;
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.5), rgba(100, 116, 139, 0.5));
+  border-color: transparent;
+  color: #fff;
 
   &:hover {
-    background-color: #cbd5e1;
-    border-color: #cbd5e1;
+    background: linear-gradient(135deg, rgba(148, 163, 184, 0.7), rgba(100, 116, 139, 0.7));
+    filter: brightness(1.05);
   }
 `;
 

@@ -17,16 +17,26 @@ const Header = styled.header`
   margin-bottom: 2rem;
   padding: 1.4rem 1.8rem;
   border-radius: 1.5rem;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.78);
+  border: 2px solid var(--brand-500);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(244, 208, 63, 0.08));
   backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(212, 165, 0, 0.1);
 `;
 
 const Brand = styled(Link)`
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: 0.01em;
-  color: var(--ink-900);
+  background: linear-gradient(135deg, var(--brand-700), var(--brand-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+  transition: transform 120ms ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 const Nav = styled.nav`
@@ -38,31 +48,41 @@ const Nav = styled.nav`
 const NavLink = styled(Link)`
   padding: 0.8rem 1.2rem;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 2px solid transparent;
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--ink-700);
   background: var(--surface);
+  cursor: pointer;
+  transition: all 120ms ease;
+  position: relative;
 
   &:hover {
-    border-color: var(--brand-500);
+    border-color: var(--brand-600);
     color: var(--brand-700);
+    background: linear-gradient(135deg, rgba(244, 208, 63, 0.1), rgba(255, 237, 78, 0.08));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 165, 0, 0.15);
   }
 `;
 
 const AuthButton = styled.button`
   padding: 0.8rem 1.2rem;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 2px solid transparent;
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--ink-700);
   background: var(--surface);
   cursor: pointer;
+  transition: all 120ms ease;
 
   &:hover {
-    border-color: var(--brand-500);
+    border-color: var(--brand-600);
     color: var(--brand-700);
+    background: linear-gradient(135deg, rgba(244, 208, 63, 0.1), rgba(255, 237, 78, 0.08));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 165, 0, 0.15);
   }
 `;
 

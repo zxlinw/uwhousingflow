@@ -16,11 +16,11 @@ const Meta = styled.p`
 const Empty = styled.div`
   margin-top: 2rem;
   padding: 2.2rem;
-  border: 1px dashed var(--line);
+  border: 2px dashed var(--brand-500);
   border-radius: 1.2rem;
   font-size: 1.6rem;
   color: var(--ink-700);
-  background: rgba(255, 255, 255, 0.72);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(244, 208, 63, 0.06));
 `;
 
 const Favorites = () => {

@@ -23,7 +23,7 @@ export const Input = styled.input`
 
 export const Button = styled.button`
   color: #fff;
-  background: linear-gradient(135deg, var(--brand-700), var(--brand-500));
+  background: linear-gradient(135deg, var(--brand-700), var(--brand-600));
   border-color: transparent;
   display: inline-block;
   text-align: center;
@@ -37,17 +37,18 @@ export const Button = styled.button`
   border-radius: 1.1rem;
   user-select: none;
   transition: transform 120ms ease, box-shadow 160ms ease, filter 120ms ease;
+  box-shadow: 0 4px 15px rgba(212, 165, 0, 0.2);
 
   &:hover {
     cursor: pointer;
-    transform: translateY(-1px);
-    filter: brightness(1.03);
-    box-shadow: 0 12px 26px rgba(20, 80, 54, 0.28);
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 8px 25px rgba(201, 134, 15, 0.3);
   }
 
   &:active {
     transform: translateY(0);
-    filter: brightness(0.98);
+    filter: brightness(0.95);
   }
 
   &:disabled {

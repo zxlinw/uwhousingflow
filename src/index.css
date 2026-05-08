@@ -3,20 +3,20 @@ html {
 }
 
 :root {
-  --bg-top: #f6fbf6;
-  --bg-bottom: #ebf5ef;
-  --ink-900: #12231a;
-  --ink-700: #2f4a3d;
-  --ink-500: #5e7a6a;
+  --bg-top: #fffef9;
+  --bg-bottom: #fffbf0;
+  --ink-900: #2b2416;
+  --ink-700: #483d30;
+  --ink-500: #7a6d5f;
   --surface: #ffffff;
-  --surface-alt: #f7fbf8;
-  --line: #d7e4db;
-  --brand-700: #1f6d49;
-  --brand-600: #2d855b;
-  --brand-500: #3ea06f;
-  --accent-500: #d98f2b;
-  --accent-400: #e4a64e;
-  --shadow-lg: 0 24px 70px rgba(14, 41, 29, 0.12);
+  --surface-alt: #fffef8;
+  --line: #f0e6d2;
+  --brand-700: #c9860f;
+  --brand-600: #d4a500;
+  --brand-500: #f4d03f;
+  --accent-500: #ffd700;
+  --accent-400: #ffed4e;
+  --shadow-lg: 0 24px 70px rgba(201, 134, 15, 0.12);
 }
 
 * {
@@ -35,8 +35,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 2rem;
   background:
-    radial-gradient(circle at top left, rgba(62, 160, 111, 0.2), transparent 45%),
-    radial-gradient(circle at 90% 0%, rgba(217, 143, 43, 0.15), transparent 35%),
+    radial-gradient(circle at top left, rgba(244, 208, 63, 0.15), transparent 45%),
+    radial-gradient(circle at 90% 0%, rgba(212, 165, 0, 0.12), transparent 35%),
     linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
   color: var(--ink-900);
   padding: 3rem 2rem 8rem;

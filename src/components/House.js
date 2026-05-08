@@ -16,15 +16,17 @@ const AddReviewButton = styled(Link)`
   padding: 1.4rem 2.2rem;
   border-radius: 999px;
   color: #fff;
-  background: linear-gradient(135deg, #1d4ed8, #0f766e);
-  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.24);
+  background: linear-gradient(135deg, var(--brand-700), var(--brand-600));
+  box-shadow: 0 18px 35px rgba(212, 165, 0, 0.24);
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: 700;
+  transition: all 120ms ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 22px 40px rgba(15, 23, 42, 0.28);
+    box-shadow: 0 22px 40px rgba(201, 134, 15, 0.32);
+    filter: brightness(1.05);
   }
 `;
 
@@ -50,13 +52,15 @@ const FavoriteButton = styled.button`
   font-weight: 700;
   color: #fff;
   background: ${({ $active }) => ($active
-    ? 'linear-gradient(135deg, #ef4444, #f97316)'
-    : 'linear-gradient(135deg, #64748b, #475569)')};
-  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.24);
+    ? 'linear-gradient(135deg, var(--brand-700), var(--brand-600))'
+    : 'linear-gradient(135deg, #94a3b8, #64748b)')};
+  box-shadow: 0 16px 30px rgba(212, 165, 0, ${({ $active }) => $active ? '0.24' : '0.12'});
   cursor: pointer;
+  transition: all 120ms ease;
 
   &:hover {
-    transform: translateY(-2px) scale(1.03);
+    transform: translateY(-2px) scale(1.05);
+    filter: ${({ $active }) => $active ? 'brightness(1.05)' : 'brightness(1.03)'};
   }
 
   &:disabled {
@@ -66,12 +70,12 @@ const FavoriteButton = styled.button`
 `;
 
 const AverageRatingsSection = styled.div`
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(244, 208, 63, 0.08));
+  border: 2px solid var(--brand-500);
   border-radius: 2rem;
   padding: 2.4rem;
   margin: 2rem 0;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 24px 60px rgba(212, 165, 0, 0.15);
   backdrop-filter: blur(16px);
 `;
 
@@ -79,8 +83,8 @@ const SummaryPanel = styled.div`
   margin: 0 0 2rem;
   padding: 1.8rem 2rem;
   border-radius: 1.4rem;
-  border: 1px solid rgba(37, 99, 235, 0.16);
-  background: linear-gradient(180deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.98));
+  border: 2px solid var(--brand-500);
+  background: linear-gradient(180deg, rgba(244, 208, 63, 0.06), rgba(255, 237, 78, 0.04));
 `;
 
 const SummaryLabel = styled.p`
@@ -89,7 +93,7 @@ const SummaryLabel = styled.p`
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #2563eb;
+  color: var(--brand-700);
 `;
 
 const SummaryText = styled.p`

@@ -9,9 +9,9 @@ const Container = styled.form`
         gap: 1rem;
         width: min(96rem, 100%);
         padding: 1.6rem;
-        border: 1px solid var(--line);
+        border: 2px solid var(--brand-500);
         border-radius: 1.6rem;
-        background: linear-gradient(180deg, var(--surface) 0%, var(--surface-alt) 100%);
+        background: linear-gradient(135deg, var(--surface), rgba(244, 208, 63, 0.08));
         box-shadow: var(--shadow-lg);
 
         > input {
